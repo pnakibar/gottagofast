@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: Latin1 -*-
 import sys
+from operator import itemgetter
+
 class Grafo:
 	def __init__(self, nome, tipo, numVertices, rotuloVertices, matriz):
 		self.nome = nome
@@ -41,6 +43,7 @@ class Grafo:
 					pred[e] = v
 					loop(G, e, tempo)
 			
+
 			cor[v] = "preto"
 			tExterno[0] += tempo
 			tempo+=1
@@ -48,7 +51,7 @@ class Grafo:
 
 
 		loop(self.matriz, 0, 0)
-		return pred, T
+		return D, T
 
 	def BFS(self):
 		G = self.matriz
@@ -94,7 +97,7 @@ class Grafo:
 				peso = self.matriz[i][j]
 				if distance[i] + peso < distance[j]:
 					raise Exception("Graph contains a negative-weight cycle")
-		return distance, predecessor
+		return predecessor
 
 	def noIncomingEdges(self):
 		noInc = []
@@ -108,25 +111,25 @@ class Grafo:
 				noInc.append(i)
 
 		return noInc
-						
-						
-
-
+	
 	def ordenacaoTopologica(self):
-		L = []
-		S = list(set(self.noIncomingEdges()))
-		matrizBkp = self.matriz
+		D, T = self.DFS()
 
-		while len(S) > 0:
-			n = S.pop(0)
-			L.append(n)
+		ordenadoT = {}
+		for k, v in sorted(a.items(), key=itemgetter(1)):
+			ordenadoT[k] = v
 
-			for e in self.adjacentes(n):
-				self.matriz[n][e] = 0
-				
+		return ordenadoT
+	
+	def inicializaOrigemUnica(self, pred, d):
+		
+		
+
+	def shortestPathGAO(self):
+		ordenacaoTopologica = self.ordenacaoTopologica()
 
 
-	#def shortestPathGAO(self):
+
 
 
 
