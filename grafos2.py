@@ -163,7 +163,7 @@ def bellmanFord(matriz, rotulos, s):
 
 def caminhoMaisCurtoGao(matriz, rotulos, s):
     d = {}
-    lot = DFS(matriz, rotulos, ordtop=True) #TODO: ordenar pelo valor
+    lot = DFS(matriz, rotulos)
     predecessor = {}
 
     #inicializar origem unica
@@ -173,16 +173,16 @@ def caminhoMaisCurtoGao(matriz, rotulos, s):
     d[s] = 0
 
     #relaxamento
-    print("lot", lot)
     for u in lot:
-        print("u:", str(u), "adjacente: ", adjacente(matriz,u))
         for v in adjacente(matriz, u):
             if d[v] > d[u] + matriz[u][v]:
                 d[v] = d[u] + matriz[u][v]
                 predecessor[v] = u
 
-    print("predecessor", predecessor)
-    print("d", d)
+    #print("predecessor", predecessor)
+    #print("d", d)
+
+    return predecessor, d
 
 
 #s->no inicial
@@ -211,22 +211,39 @@ def prim(matriz, rotulos, s):
             if (v in Q) and matriz[u][v] < custo[v]:
                 p[v] = u
                 custo[v] = matriz[u][v]
-    print(custo)
-    print(p)
+    #print(custo)
+    #print(p)
+    return custo, p
 
-
+############MAIN!!!
 rotulos, matriz = load(sys.argv[1])
-'''
-print("dfs:")
-print(DFS(matriz, rotulos))
-print("bfs:")
-print(BFS(matriz, rotulos))
-print("bellmanFord:")
-print(bellmanFord(matriz, rotulos, 0))
-'''
-print("caminhoMaisCurtoGao")
-print(caminhoMaisCurtoGao(matriz, rotulos, 0))
-'''
-print("prim")
-print(prim(matriz, rotulos, 0))
-'''
+funcoes = sys.argv[2:]
+
+if len(funcoes) == 0:
+    funcoes.append('all')
+
+for e in funcoes:
+    e = e.lower()
+    if e == 'prim' or e == 'all':
+        print("Prim:")
+        custo, p = prim(matriz, rotulos, 0)
+        print("\tCusto: "+str(custo))
+        print("\tPredecessores: "+str(p))
+
+    if e == 'bfs' or e == 'all':
+        print("BFS:")
+        print("\tPredecessores: "+str(BFS(matriz, rotulos)))
+
+    if e == 'dfs' or e == 'all':
+        print("DFS:")
+        print("\tPredecessores: "+str(DFS(matriz, rotulos)))
+
+    if e == 'bellmanford' or e == 'all':
+        print("Bellman Ford:")
+        print("\tPredecessores: "+str(bellmanFord(matriz, rotulos, 0)))
+
+    if e == 'gao' or e == 'all':
+        p, d = caminhoMaisCurtoGao(matriz, rotulos, 0)
+        print("Caminho mais curto GAO:")
+        print("\tPredecessores: "+str(p))
+        print("\tDistancia: "+str(d))
